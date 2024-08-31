@@ -10,24 +10,8 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                echo "Building our image"
-		echo "${params.VERSION}"
-            }
-        }
-        stage('Build') {
-            steps {
-				echo "Building our image"
-            }
-        }
-        stage('Deploy Run') {
-            steps {
-				echo "Deploy and Run"
-            }
-        }
-        stage('Do Some Tests') {
-            steps {
-				echo "Do Some tests"
-            }
+                echo "Pull Image Name: ${params.VERSION}"
+		        Image.pull(${params.VERSION})
         }
     }
 }
