@@ -3,6 +3,7 @@ pipeline {
 	environment {
         // define an image tag name
         def img = ("${env.JOB_NAME}:${env.BUILD_ID}").toLowerCase()
+        def image = docker.image("${params.VERSION}")
     }	
     parameters {
         string(name: 'VERSION', defaultValue: '', description: 'Version Variable')
@@ -11,9 +12,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 echo "Pull Image Name: ${params.VERSION}"
-		        docker.withRegistry("${params.VERSION}") {
-                   docker.image.pull()
-                } 
+		        image.pull()
             }
         }
     }
