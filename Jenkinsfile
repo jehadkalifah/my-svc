@@ -11,7 +11,9 @@ pipeline {
         stage('Checkout') {
             steps {
                 echo "Pull Image Name: ${params.VERSION}"
-		docker.image.pull("${params.VERSION}")
+		        docker.withRegistry("${params.VERSION}") {
+                   docker.image.pull()
+                } 
             }
         }
     }
