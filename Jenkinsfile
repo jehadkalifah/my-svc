@@ -5,7 +5,7 @@ pipeline {
         def img = ("${env.JOB_NAME}:${env.BUILD_ID}").toLowerCase()
     }	
     parameters {
-        string(name: 'VERSION', defaultValue: '', description: 'Version Variable')
+        string(name: 'vr', defaultValue: '', description: 'Version Variable')
     }
     stages {
         stage('Checkout') {
