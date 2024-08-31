@@ -4,7 +4,9 @@ pipeline {
         // define an image tag name
         def img = ("${env.JOB_NAME}:${env.BUILD_ID}").toLowerCase()
     }	
-
+    parameters {
+        string(name: 'VERSION', defaultValue: '', description: 'Version Variable')
+    }
     stages {
         stage('Checkout') {
             steps {
