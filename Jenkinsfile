@@ -12,6 +12,7 @@ pipeline {
             steps {
                 echo "Pull Image Name: ${params.VERSION}"
 		        Image.pull(${params.VERSION})
+            }
         }
     }
 }
