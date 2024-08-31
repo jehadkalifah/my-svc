@@ -11,7 +11,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 echo "Building our image"
-		echo "${VERSION}"
+		echo "${params.VERSION}"
             }
         }
         stage('Build') {
