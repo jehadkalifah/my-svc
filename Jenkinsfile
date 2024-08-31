@@ -11,7 +11,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 echo "Pull Image Name: ${params.VERSION}"
-		docker.image("${params.VERSION}").pull()
+		docker.image.pull("${params.VERSION}")
             }
         }
     }
