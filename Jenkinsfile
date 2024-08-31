@@ -9,6 +9,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 echo "Building our image"
+		echo "${version}"
             }
         }
         stage('Build') {
