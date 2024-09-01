@@ -4,6 +4,7 @@ pipeline {
         // define an image tag name
         def img = ("${env.JOB_NAME}:${env.BUILD_ID}").toLowerCase()
         def prodimage = docker.image("${params.VERSION}")
+	def id = docker.prodimage.id  	
     }	
     parameters {
         string(name: 'VERSION', defaultValue: '', description: 'Version Variable')
@@ -12,7 +13,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 echo "Pull Image Name: ${params.VERSION}"
-		id = docker.prodimage.id   
+		echo "Image ID is: ${img}"
 		echo "Image ID is: ${id}"
             }
         }
