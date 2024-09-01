@@ -44,7 +44,7 @@ pipeline {
                         imageProd.push()
                         // imageTest.imageName("joj")
                     }
-                    sh "docker rm ${dockerImage} ${ProdTagImage}"
+                    sh "docker rmi ${dockerImage} ${ProdTagImage}"
                 }
             }
         }
