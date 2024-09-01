@@ -2,8 +2,9 @@ pipeline {
     agent any
     
     environment { 
-        registryProd = '192.168.100.224:30273'
-        registryTest = '192.168.100.224:30274'
+        registryProd = 'http://192.168.100.224:30273'
+        registryTest = 'http://192.168.100.224:30274'
+        registryProdTag   = '192.168.100.224:30273'
         registryCredential = 'nexuscred' 
         dockerImage = '' 
     }
@@ -24,8 +25,8 @@ pipeline {
                     // imgpull = docker.image("${img}").pull()
                     // docker.image("${img}").tag(["192.168.100.224:30274/nginx:latest"])
                     dockerImage = "${params.IMAGE_REGISTRY}:${params.IMAGE_TAG}"
-                    ProddockerImage = "${params.IMAGE_REGISTRY}:${params.IMAGE_TAG}"
-                    echo "Docker Image Tag is: ${dockerImage}"
+                    ProdTagImage = "${registryProdTag}:${params.IMAGE_TAG}"
+                    echo "Prod Docker Image Tag is: ${ProdTagImage}"
                     // docker.image("${params.IMAGE_REGISTRY}:${params.IMAGE_TAG}").pull()
                     docker.withRegistry( "${registryTest}", registryCredential ) { 
                         // docker.image("${dockerImage}").pull()
@@ -33,7 +34,7 @@ pipeline {
                         imageTest.pull()
                         // imageTest.imageName("joj")
                     }
-                    sh "docker tag ${dockerImage} ${registryProd}:${IMAGE_TAG}"
+                    sh "docker tag ${dockerImage} ${ProdTagImage}"
                 }
             }
         }
