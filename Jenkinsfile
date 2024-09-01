@@ -34,7 +34,7 @@ pipeline {
                         // imageTest.imageName("joj")
                     }
                 }
-                docker tag "${dockerImage}" "${registryProd}:${IMAGE_TAG}"
+                sh 'docker tag "${dockerImage}" "${registryProd}:${IMAGE_TAG}"'
             }
         }
     }
