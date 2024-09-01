@@ -13,8 +13,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 echo "Pull Image Name: ${params.VERSION}"
-		prodimage = docker.image("nginx:latest")	    
-		prodimage.pull()   
+		prodimage = docker.image("nginx:latest").pull()	 
             }
         }
     }
