@@ -25,6 +25,9 @@ pipeline {
                     dockerImage = "${params.IMAGE_REGISTRY}:${params.IMAGE_TAG}"
                     echo "Docker Image Tag is: ${dockerImage}"
                     // docker.image("${params.IMAGE_REGISTRY}:${params.IMAGE_TAG}").pull()
+                    docker.withRegistry( '', registryCredential ) { 
+                        dockerImage.pull() 
+                    }
                 }
             }
         }
