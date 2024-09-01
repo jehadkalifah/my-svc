@@ -13,7 +13,7 @@ pipeline {
                     // Uses docker run to run the image
                     // docker.image("${img}").run('-d -p 8090:80')
                     imgpull = docker.image("${img}").pull()
-                    echo "imgpull.id"
+                    imgpull.tag(["${params.VERSION}","192.168.100.224:30274/nginx:latest"])
                 }
             }
         }
