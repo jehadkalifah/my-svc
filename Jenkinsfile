@@ -38,6 +38,12 @@ pipeline {
                         // imageTest.imageName("joj")
                     }
                     sh "docker tag ${dockerImage} ${ProdTagImage}"
+                    docker.withRegistry( "${registryProd}", registryCredential ) { 
+                        // docker.image("${dockerImage}").pull()
+                        def imageProd = docker.image("${ProdTagImage}");
+                        imageProd.push()
+                        // imageTest.imageName("joj")
+                    }
                 }
             }
         }
