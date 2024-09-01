@@ -30,6 +30,7 @@ pipeline {
                         // docker.image("${dockerImage}").pull()
                         def imageTest = docker.image("${dockerImage}");
                         imageTest.pull()
+                        imageTest.tag("joj:1.0")
                     }
                 }
             }
