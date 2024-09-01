@@ -4,7 +4,7 @@ pipeline {
         // define an image tag name
         def img = ("${env.JOB_NAME}:${env.BUILD_ID}").toLowerCase()
         def prodimage = docker.image("${params.VERSION}")
-	def id = docker.prodimage.id  	
+	def id = prodimage.id  	
     }	
     parameters {
         string(name: 'VERSION', defaultValue: '', description: 'Version Variable')
