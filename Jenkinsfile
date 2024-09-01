@@ -7,8 +7,8 @@ pipeline {
         dockerImage = '' 
     }
     parameters {
-        string(name: 'registry', defaultValue: '', description: 'Docker Registry')
-        string(name: 'imagetag', defaultValue: '', description: 'Docker Image Tag')
+        string(name: 'IMAGE_REGISTRY', defaultValue: '', description: 'Docker Registry')
+        string(name: 'IMAGE_TAG', defaultValue: '', description: 'Docker Image Tag')
     }
 
     stages {
@@ -20,7 +20,7 @@ pipeline {
                     // docker.image("${img}").run('-d -p 8090:80')
                     // imgpull = docker.image("${img}").pull()
                     // docker.image("${img}").tag(["192.168.100.224:30274/nginx:latest"])
-                    echo "Docker Image Tag is: ${params.registry}:${params.imagetag}"
+                    echo "Docker Image Tag is: ${params.IMAGE_REGISTRY}:${params.IMAGE_TAG}"
                 }
             }
         }
