@@ -12,7 +12,8 @@ pipeline {
                     img = "${params.VERSION}"
                     // Uses docker run to run the image
                     // docker.image("${img}").run('-d -p 8090:80')
-                    docker.image("${img}").pull()
+                    imgpull = docker.image("${img}").pull()
+                    echo "imgpull.id"
                 }
             }
         }
