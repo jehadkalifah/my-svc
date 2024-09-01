@@ -7,7 +7,9 @@ pipeline {
         dockerImage = '' 
     }
     parameters {
+        // ${trigger.artifacts[0].name}
         string(name: 'IMAGE_REGISTRY', defaultValue: '', description: 'Docker Registry')
+        // ${trigger.artifacts[0].version}
         string(name: 'IMAGE_TAG', defaultValue: '', description: 'Docker Image Tag')
     }
 
@@ -21,6 +23,7 @@ pipeline {
                     // imgpull = docker.image("${img}").pull()
                     // docker.image("${img}").tag(["192.168.100.224:30274/nginx:latest"])
                     echo "Docker Image Tag is: ${params.IMAGE_REGISTRY}:${params.IMAGE_TAG}"
+                    docker.image("${params.IMAGE_REGISTRY}:${params.IMAGE_TAG}").pull()
                 }
             }
         }
