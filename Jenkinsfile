@@ -10,8 +10,11 @@ pipeline {
     }
     parameters {
         // ${trigger.artifacts[0].name}
+        // ${trigger.registry}
         string(name: 'IMAGE_REGISTRY', defaultValue: '', description: 'Docker Registry')
-        // ${trigger.artifacts[0].version}
+        // ${trigger.repository}
+        string(name: 'IMAGE_NAME', defaultValue: '', description: 'Docker Image Name')
+        // ${trigger.tag}
         string(name: 'IMAGE_TAG', defaultValue: '', description: 'Docker Image Tag')
     }
 
@@ -24,8 +27,8 @@ pipeline {
                     // docker.image("${img}").run('-d -p 8090:80')
                     // imgpull = docker.image("${img}").pull()
                     // docker.image("${img}").tag(["192.168.100.224:30274/nginx:latest"])
-                    dockerImage = "${params.IMAGE_REGISTRY}:${params.IMAGE_TAG}"
-                    ProdTagImage = "${registryProdTag}:${params.IMAGE_TAG}"
+                    dockerImage = "${params.IMAGE_REGISTRY}/${IMAGE_NAME}:${params.IMAGE_TAG}"
+                    ProdTagImage = "${registryProdTag}/${IMAGE_NAME}:${params.IMAGE_TAG}"
                     echo "Prod Docker Image Tag is: ${ProdTagImage}"
                     // docker.image("${params.IMAGE_REGISTRY}:${params.IMAGE_TAG}").pull()
                     docker.withRegistry( "${registryTest}", registryCredential ) { 
