@@ -22,8 +22,9 @@ pipeline {
                     // docker.image("${img}").run('-d -p 8090:80')
                     // imgpull = docker.image("${img}").pull()
                     // docker.image("${img}").tag(["192.168.100.224:30274/nginx:latest"])
-                    echo "Docker Image Tag is: ${params.IMAGE_REGISTRY}:${params.IMAGE_TAG}"
-                    docker.image("${params.IMAGE_REGISTRY}:${params.IMAGE_TAG}").pull()
+                    dockerImage = "${params.IMAGE_REGISTRY}:${params.IMAGE_TAG}"
+                    echo "Docker Image Tag is: ${dockerImage}"
+                    // docker.image("${params.IMAGE_REGISTRY}:${params.IMAGE_TAG}").pull()
                 }
             }
         }
