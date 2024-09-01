@@ -7,6 +7,7 @@ pipeline {
         registryProdTag   = '192.168.100.224:30273'
         registryCredential = 'nexuscred' 
         dockerImage = '' 
+        ProdTagImage = ''
     }
     parameters {
         // ${trigger.artifacts[0].name}
@@ -22,31 +23,34 @@ pipeline {
         stage('Pull Docker Image') {
             steps {
                 script{
-                    // img = "${params.VERSION}"
-                    // Uses docker run to run the image
-                    // docker.image("${img}").run('-d -p 8090:80')
-                    // imgpull = docker.image("${img}").pull()
-                    // docker.image("${img}").tag(["192.168.100.224:30274/nginx:latest"])
                     dockerImage = "${params.IMAGE_REGISTRY}/${IMAGE_NAME}:${params.IMAGE_TAG}"
-                    ProdTagImage = "${registryProdTag}/${IMAGE_NAME}:${params.IMAGE_TAG}"
-                    echo "Prod Docker Image Tag is: ${ProdTagImage}"
-                    // docker.image("${params.IMAGE_REGISTRY}:${params.IMAGE_TAG}").pull()
+                    echo "Test Docker Image Tag is: ${dockerImage}"
                     docker.withRegistry( "${registryTest}", registryCredential ) { 
                         // docker.image("${dockerImage}").pull()
                         def imageTest = docker.image("${dockerImage}");
                         imageTest.pull()
-                        // imageTest.imageName("joj")
                     }
-                    sh "docker tag ${dockerImage} ${ProdTagImage}"
-                    docker.withRegistry( "${registryProd}", registryCredential ) { 
-                        // docker.image("${dockerImage}").pull()
-                        def imageProd = docker.image("${ProdTagImage}");
-                        imageProd.push()
-                        // imageTest.imageName("joj")
-                    }
-                    sh "docker rmi ${dockerImage} ${ProdTagImage}"
                 }
             }
         }
+        stage('Tag Docker Image') {
+            steps {
+                script{
+                    ProdTagImage = "${registryProdTag}/${IMAGE_NAME}:${params.IMAGE_TAG}"
+                    echo "Prod Docker Image Tag is: ${ProdTagImage}"
+                    sh "docker tag ${dockerImage} ${ProdTagImage}"
+                }
+            }
+        }
+        stage('Push Docker Image') {
+            steps {
+                script{
+                    docker.withRegistry( "${registryProd}", registryCredential ) { 
+                        def imageProd = docker.image("${ProdTagImage}");
+                        imageProd.push()
+                    }
+                }
+            }
+        }        
     }
 }
