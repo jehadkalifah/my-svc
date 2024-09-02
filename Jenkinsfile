@@ -52,5 +52,12 @@ pipeline {
                 }
             }
         }        
+        stage('Remove Docker Image') {
+            steps {
+                script{
+                    sh "docker rmi ${dockerImage} ${ProdTagImage}"                    
+                }
+            }
+        }      
     }
 }
