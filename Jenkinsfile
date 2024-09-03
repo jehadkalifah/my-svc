@@ -1,40 +1,63 @@
 pipeline {
     agent any
-	environment {
-        registry = "jehaddocker82/my-smart-app"
-        img = "$registry"+":${env.BUILD_ID}"
-        registryCredential = "dockerhub-login"
-    }	
+    
+    environment { 
+        registryProd = 'http://192.168.100.224:30273'
+        registryTest = 'http://192.168.100.224:30274'
+        registryProdTag   = '192.168.100.224:30273'
+        registryCredential = 'nexuscred' 
+        dockerImage = '' 
+        ProdTagImage = ''
+    }
+    parameters {
+        // ${trigger.artifacts[0].name}
+        // ${trigger.registry}
+        string(name: 'IMAGE_REGISTRY', defaultValue: '', description: 'Docker Registry')
+        // ${trigger.repository}
+        string(name: 'IMAGE_NAME', defaultValue: '', description: 'Docker Image Name')
+        // ${trigger.tag}
+        string(name: 'IMAGE_TAG', defaultValue: '', description: 'Docker Image Tag')
+    }
 
     stages {
-        stage('Checkout') {
+        stage('Pull Docker Image') {
             steps {
-                git branch: 'main', url: 'https://github.com/jehadkalifah/SmartFlaskAPP.git'
-                sh 'ls -la'
-            }
-        }
-        stage('Build') {
-            steps {
-				echo "Building our image"
-				script {
-                    // the whole command to build the image
-					dockerImg = docker.build("${img}")
+                script{
+                    dockerImage = "${params.IMAGE_REGISTRY}/${IMAGE_NAME}:${params.IMAGE_TAG}"
+                    echo "Test Docker Image Tag is: ${dockerImage}"
+                    docker.withRegistry( "${registryTest}", registryCredential ) { 
+                        // docker.image("${dockerImage}").pull()
+                        def imageTest = docker.image("${dockerImage}");
+                        imageTest.pull()
+                    }
                 }
             }
         }
-        stage('Push') {
+        stage('Tag Docker Image') {
             steps {
-				echo "Pushing our image"
-				script {
-                    // docker.withRegistry('https://registry.hub.docker.com', registryCredential)
-                    withDockerRegistry(credentialsId: 'dockerhub-login') {
-                        dockerImg.push()
-                        // then the second one, it will be tagged as the latest
-                        // so it will update the latest with the last image is pushed
-                        dockerImg.push('latest')
+                script{
+                    ProdTagImage = "${registryProdTag}/${IMAGE_NAME}:${params.IMAGE_TAG}"
+                    echo "Prod Docker Image Tag is: ${ProdTagImage}"
+                    sh "docker tag ${dockerImage} ${ProdTagImage}"
+                }
+            }
+        }
+        stage('Push Docker Image') {
+            steps {
+                script{
+                    docker.withRegistry( "${registryProd}", registryCredential ) { 
+                        def imageProd = docker.image("${ProdTagImage}");
+                        imageProd.push()
                     }
                 }
             }
         }        
+        stage('Remove Docker Image') {
+            steps {
+                script{
+                    sh "docker rmi ${dockerImage} ${ProdTagImage}"                    
+                }
+            }
+        }      
     }
 }
